@@ -44,18 +44,24 @@ class Point(NamedTuple):
     """Point class generates a point with (x,y) coordinates.
     
     Point class uses the 'NamedTuple' factory function (sublcass of a NamedTuple). 
+    By using NamedTuple, it extends the 'tuple' class with named field attributes. 
     
-    By using NamedTuple, it extends the 'tuple' class with named fields. 
-    The name fields in this class are:
-
+    Attributes
+    ----------
     x : int
         Represents the x-coordinate of a Euclidean point.
     y : int
         Represents the y-coordinate of a Euclidean point.
 
-    The Point class contains a .draw() method. The Primitive Protocol also
-    contains a .draw() method, but this Point class is not extended from the 
-    Primitive Protocol. 
+    Methods
+    -------
+    draw(**attributes):
+        Returns a point as an (x, y) coordinate.
+        The Point class contains a .draw() method. The Primitive Protocol also
+        contains a .draw() method, but this Point class is not extended from the 
+        Primitive Protocol. 
+    translate(x=0, y=0):
+        returns a translated (shifted) point using input x and y values. 
     """
 
     x: int
@@ -163,7 +169,7 @@ class Text:
 
 class NullPrimitive:
     """Defines a Null Primitive object to adhere to a null object pattern."""
-    
+
     def draw(self, **attributes) -> str:
         return ""
 
