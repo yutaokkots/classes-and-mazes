@@ -107,5 +107,10 @@ Square (src/maze_solver/models/square.py)
 - every square should have coordinates
 - square should have a border pattern
 - square may have an optional role
+- the width and heigh of the square is NOT part of the square class. 
+- when creating a square, the index, row, column, and border pattern are required
+- when creating a square, the role is optional.
 
+Maze (src/maze_solver/models/maze.py)
+- an ordered collection of squares that can be represented by a Tuple.
 
