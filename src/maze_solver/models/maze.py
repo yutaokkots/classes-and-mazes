@@ -19,8 +19,8 @@ class Maze:
     (1) extra work when iterating over squares; and
     (2) accessing a Square by index, 
     two specialized methods allow for the Squares to be iterable and subscriptable: 
-       __iter__()
-       __getitem__()
+        .__iter__()
+        .__getitem__()
     """
     squares: tuple[Square, ...]
 

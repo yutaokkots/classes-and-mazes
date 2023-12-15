@@ -114,3 +114,5 @@ Square (src/maze_solver/models/square.py)
 Maze (src/maze_solver/models/maze.py)
 - an ordered collection of squares that can be represented by a Tuple.
 
+
+https://realpython.com/python-maze-solver/#step-3-visualize-the-maze-with-scalable-vector-graphics-svg
