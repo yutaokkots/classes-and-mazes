@@ -1,4 +1,13 @@
-"""Defines the geometric primitive generic function to create an XML tag. 
+""" Defines specific SVG primitives. 
+
+Functions
+---------
+tag : function
+    Defines a geometric primitive generic function to create XML tags. 
+Classes
+-------
+Primitive : class
+
 
 The XML tag helps to generate an SVG element.
 For example,
@@ -9,6 +18,7 @@ For example,
 '<svg xmlns="http://www.w3.org/2000/svg" stroke-linejoin="round" />'
 """
 
+from dataclasses import dataclass
 from typing import Protocol, NamedTuple
 
 class Primitive(Protocol):
@@ -23,6 +33,9 @@ class Primitive(Protocol):
         of the draw method. Instead, it includes the ellipsis (...) 
         in the method body, which is a way to indicate that the method 
         should be present but doesn't provide any implementation details.
+
+    Allows for static duck typing of class instances that contain
+    and use a 'draw()' method as a Primitive class. 
     """
     def draw(self, **attributes) -> str:
         ...
@@ -79,8 +92,83 @@ class Line(NamedTuple):
             **attributes,
         )
 
+class Polyline(tuple[Point,...]):
+    """Polyline class to create a polyline (multiple lines but unconnected at first and last point)."""
+    
+    def draw(self, **attributes) -> str:
+        """This draw method returns an xml for a <polyline> element.
+        
+        When instantiated, it uses the tuple of Point objects (between the parenthesis)
+        to self-create and become the type, tuple of Points (i.e. Polyline Type). 
+        Therefore, 'self' is the tuple of Points itself.
+        """
+        points = " ".join(point.draw() for point in self)
+        return tag("polyline", points=points, **attributes)
+    
+class Polygon(tuple[Point,...]):
+    """Polygon class to create a polygon (closed multi-line shape)."""
+
+    def draw(self, **attributes) -> str:
+        """The draw method returns an xml for a <polygon> element."""
+        points = " ".join(point.draw() for point in self)
+        return tag("polygon", points=points, **attributes)
+
+class DisjointLines(tuple[Line,...]):
+    """Disjoint class to combine existing lines. """
+
+    def draw(self, **attributes) -> str:
+        """'Draws' a connection between lines (no SVG equivalent)."""
+        return "".join(line.draw(**attributes) for line in self)
+
+@dataclass(frozen=True)
+class Rect:
+    """Rectangle class for generating a rectangle xml element.
+    
+    Because this is a dataclass with (frozen=True), instances 
+    of the class are immutable. 
+
+    Attributes
+    ----------
+    top_left : Point
+        Optional coordinates as a Point object can be provided. If provided, 
+        the point coordinates are combined with the other attributes in the 
+        draw method in the line of code: 
+            attrs = attributes | {"x": self.top_left.x, "y": self.top_left.y}
+    """
+    top_left: Point | None = None
+
+    def draw(self, **attributes) -> str:
+        """The draw method returns an xml for a <rect> element."""
+        if self.top_left:
+            attrs = attributes | {"x": self.top_left.x, "y": self.top_left.y}
+        else:
+            attrs = attributes
+        return tag("rect", **attrs)
+    
+@dataclass(frozen=True)
+class Text:
+    """Rectangle class for generating a Text xml element."""
+    content: str
+    point: Point
+
+    def draw(self, **attributes) -> str:
+        """The draw method returns an xml for a <text> element."""
+        return tag(
+            "text",
+            self.content,
+            x=self.point.x,
+            y=self.point.y,
+            **attributes
+        )
+
+class NullPrimitive:
+    """Defines a Null Primitive object to adhere to a null object pattern."""
+    
+    def draw(self, **attributes) -> str:
+        return ""
+
 def tag(name:str, value:str | None = None, **attributes) -> str:
-    """A 'tag' function that defines the creation of an XML tag.
+    """Defines the creation of an XML tag.
     
     If the attributes contain any elements, it also replaces 
     any underscores to hyphens in the attribute name. 
