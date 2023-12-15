@@ -1,0 +1,111 @@
+Requirements
+- rectangular grid of uniform squares
+- each square of the grid is same width/height
+- one entrance and one exit
+- entrance and exit are not the same cell
+- no backtracking
+- shortest paths only
+- only one role per square. 
+
+
+Scaffolding the project
+ ** Scaffold
+    maze_solver/
+    ┃
+    ┣━━ src/
+    ┃   ┗━━ maze_solver/
+    ┃       ┣━━ models/ 
+    ┃       ┃   ┗━━ __init__.py
+    ┃       ┗━━ __init__.py
+    ┗━ pyproject.toml
+Setup
+ ** Virtual Environment initialization
+    % python3 -m venv .venv
+    % . .venv/bin/activate
+ ** Install maze_solver in root directory.
+    % pip install --editable . 
+        ┗━━━ allows installation of maze-solver. 
+            Obtaining file:///--/--/--/--/2024-classes-and-mazes
+                Installing build dependencies ... done
+                Checking if build backend supports build_editable ... done
+                Getting requirements to build editable ... done
+                Preparing editable metadata (pyproject.toml) ... done
+            Building wheels for collected packages: maze-solver
+                Building editable for maze-solver (pyproject.toml) ... done
+                Created wheel for maze-solver: filename=maze_solver-1.0.0-0.editable-py3-none-any.whl size=1236 sha256=xxxxxxx
+                Stored in directory: /private/var/folders/x3/1xxxxxxxx/T/pip-ephem-wheel-cache-9y7f6bz_/wheels/fc/2f/b7/xxxxxxx
+            Successfully built maze-solver
+            Installing collected packages: maze-solver
+            Successfully installed maze-solver-1.0.0
+ ** Access Python REPL and import maze_solver
+    % python
+    >>> import maze_solver
+    >>>
+
+Creating modules in the Project
+ ** Scaffold
+    maze_solver/
+    ┃
+    ┣━━ src/
+    ┃   ┗━━ maze_solver/
+    ┃       ┣━━ models/ 
+    ┃       ┃   ┣━━ __init__.py 
+    ┃       ┃   ┣━━ border.py
+    ┃       ┃   ┣━━ maze.py
+    ┃       ┃   ┣━━ role.py
+    ┃       ┃   ┗━━ square.py
+    ┃       ┗━━ __init__.py
+    ┗━ pyproject.toml
+
+Roles (src/maze_solver/models/role.py)
+- NONE
+- enemy
+- entrance
+- exit
+- exterior
+- reward
+- wall
+
+Border (src/maze_solver/models/border.py)
+- number of sides visible
+    - minimum of 0
+    - maximum of 4
+- compass directions:
+    - North
+    - South
+    - East
+    - West
+- border pattern combinations -> 16
+    - no border (1)
+    - border on one side (4)
+    - border on two sides (6)
+    - border on three sides (4)
+    - border on four sides (1)
+- use a bitfield. 
+    each side is mapped to a binary digit
+
+    square  side    bitstring   bitcount    decimal
+                    0000        0           0
+    -       N       0001        1           1
+    _       S       0010        1           2
+    |       W       0100        1           4
+     |      E       1000        1           8
+    =       NS      0011        2           3
+    ⌜       NW      0101        2           5
+    ⌝       NE      1001        2           9
+    ⌞       SW      0110        2           6
+    ⌟       SE      1010        2           10
+    ||      WE      1100        2           12
+    ⊏       NSW     0111        3           7
+    ⊐       NSE     1011        3           11
+    ⊓       NWE     1101        3           13
+    ⊔       SWE     1110        3           14
+    □       NSWE    1111        4           15
+
+Square (src/maze_solver/models/square.py)
+- convey information about maze location
+- every square should have coordinates
+- square should have a border pattern
+- square may have an optional role
+
+
